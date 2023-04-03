@@ -39,13 +39,14 @@ public class ChatListener implements Listener {
         String message = Utils.color(event.getMessage());
         val configFile = this.manager.getConfigFile();
         String format = null;
-        if (message.charAt(0) == DONATE_CHAR && !player.hasPermission(VaultChatManager.DONATE_CHAT_PERMISSION)) {
+        char identifyChar = message.charAt(0);
+        if (identifyChar == DONATE_CHAR && !player.hasPermission(VaultChatManager.DONATE_CHAT_PERMISSION)) {
             message = message.substring(1);
         }
-        if (message.charAt(0) == ADMIN_CHAR && !player.hasPermission(VaultChatManager.ADMIN_CHAT_PERMISSION)) {
+        if (identifyChar == ADMIN_CHAR && !player.hasPermission(VaultChatManager.ADMIN_CHAT_PERMISSION)) {
             message = message.substring(1);
         }
-        switch (message.charAt(0)) {
+        switch (identifyChar) {
             case GLOBAL_CHAR: {
                 chatType = ChatType.GLOBAL;
                 format = configFile.getGlobalChatFormat();
