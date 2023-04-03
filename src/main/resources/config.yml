@@ -1,0 +1,29 @@
+#Радиус, на котором игрока будет *слышно*
+localChatRange: 100
+
+#Настройки редиса, через который будут передаваться личные сообщения по сети.
+#А так же будут кешироваться игроки для команды /reply
+redis:
+  host: 127.0.0.1
+  port: 6379
+  password: ""
+  database: 0
+  serverChannel: "survival"
+
+privateChatSettings:
+  #Время на протяжении которого, игрок может ответить через /reply (В секундах)
+  replyLifetime: 120
+  messageFormat: "&c[&6(sender) -> (receiver)&c] &a(message)"
+
+chatFormat:
+  local:  "[L] (prefix)(playerName)(suffix)&b: &7(message)"
+  global: "[G] (prefix)(playerName)(suffix)&b: &7(message)"
+  donate: "[D] (prefix)(playerName)(suffix)&b: &7(message)"
+  admin:  "[A] (prefix)(playerName)(suffix)&b: &7(message)"
+
+messages:
+  privateMessageUsage:  "&6Отправить приватное сообщение игроку - &c/(label) <ник> <сообщение>"
+  privateMessageSelf:   "&cВы не можете написать сообщение самому себе."
+  replyUsage:           "&6Ответить игроку - &c/(label) <сообщение>"
+  emptyCompanions:      "&cУ вас нет актуальных собеседников."
+  playerNotFound:       "&cИгрок не найден или не в сети!"
