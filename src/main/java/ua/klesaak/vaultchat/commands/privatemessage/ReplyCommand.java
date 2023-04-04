@@ -19,7 +19,7 @@ public class ReplyCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) return true;
-        if (args.length < 1 || args[1].trim().isEmpty()) {
+        if (args.length < 1 || args[0].trim().isEmpty()) {
             sender.sendMessage(this.manager.getConfigFile().getReplyMessageUsage(label));
             return true;
         }

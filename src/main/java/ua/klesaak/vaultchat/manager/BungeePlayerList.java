@@ -11,13 +11,14 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class BungeePlayerList implements PluginMessageListener {
     private final VaultChatManager manager;
     private String server;
-    private List<String> playerList;
+    private List<String> playerList = new ArrayList<>();
     private BukkitTask updateTask;
 
     public BungeePlayerList(VaultChatManager manager) {
