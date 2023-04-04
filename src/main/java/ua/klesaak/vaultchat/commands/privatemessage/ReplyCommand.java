@@ -28,7 +28,7 @@ public class ReplyCommand implements CommandExecutor {
             sender.sendMessage(this.manager.getConfigFile().getEmptyCompanions());
             return true;
         }
-        this.manager.sendPrivateMessage(sender, companion, Utils.getFinalArg(args, 1));
+        this.manager.sendPrivateMessage(sender, companion, Utils.getFinalArg(args, 0));
         return true;
     }
 }

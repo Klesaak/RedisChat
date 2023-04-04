@@ -67,7 +67,7 @@ public class VaultChatManager {
         if (playerReceiver != null) {
             playerReceiver.sendMessage(format);
             messageSender.sendMessage(format);
-            this.cachePlayer(playerReceiver.getUniqueId().toString(), playerReceiver.getName());
+            this.cachePlayer(playerReceiver.getUniqueId().toString(), messageSender.getName());
             return;
         }
         val messageData = new MessageData(ChatType.PRIVATE, VaultChatManager.SERVER_PORT, messageSender.getName(), receiver, message);
