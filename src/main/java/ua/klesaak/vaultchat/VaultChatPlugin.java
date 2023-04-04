@@ -11,7 +11,6 @@ import org.bukkit.plugin.java.annotation.dependency.LoadBeforePlugins;
 import org.bukkit.plugin.java.annotation.dependency.SoftDependency;
 import org.bukkit.plugin.java.annotation.permission.Permission;
 import org.bukkit.plugin.java.annotation.permission.Permissions;
-import org.bukkit.plugin.java.annotation.plugin.Description;
 import org.bukkit.plugin.java.annotation.plugin.Plugin;
 import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import ua.klesaak.vaultchat.manager.VaultChatManager;
@@ -30,7 +29,6 @@ import ua.klesaak.vaultchat.manager.VaultChatManager;
         @Command(name = "reply", aliases = {"r", "otvet", "rm"}),
         @Command(name = "chat"), // вкл/выкл чат
 })
-@Description("Async and packet simple score board plugin.")
 @Permissions({
         @Permission(name = "chatmanager.reload", defaultValue = PermissionDefault.OP, desc = "Доступ к команде перезагрузки."),
         @Permission(name = "chatmanager.colorchat", defaultValue = PermissionDefault.OP, desc = "Возможность писать цветные сообщения."),

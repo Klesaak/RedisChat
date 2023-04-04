@@ -17,7 +17,6 @@ import ua.klesaak.vaultchat.commands.privatemessage.ReplyCommand;
 import ua.klesaak.vaultchat.configurations.ConfigFile;
 import ua.klesaak.vaultchat.listener.ChatListener;
 import ua.klesaak.vaultchat.redis.RedisConfig;
-import ua.klesaak.vaultchat.utils.Utils;
 
 import java.util.concurrent.CompletableFuture;
 

@@ -38,7 +38,7 @@ public class ChatListener implements Listener {
         val player = event.getPlayer();
         String message = Utils.color(event.getMessage());
         val configFile = this.manager.getConfigFile();
-        String format = null;
+        String format;
         char identifyChar = message.charAt(0);
         if (identifyChar == DONATE_CHAR && !player.hasPermission(VaultChatManager.DONATE_CHAT_PERMISSION)) {
             message = message.substring(1);

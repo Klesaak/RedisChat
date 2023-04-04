@@ -13,7 +13,7 @@ import java.util.logging.Level;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PluginConfig extends YamlConfiguration {
-    File file;
+    transient File file;
 
     public PluginConfig(JavaPlugin plugin, File directory, String configFileName) {
         this.file = new File(directory, configFileName);
