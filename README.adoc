@@ -1,0 +1,19 @@
+= Redis Chat
+
+Multiserver chat system with private messages
+
+* Minecraft `1.12.x-1.19.x`
+
+Performs data exchange between BungeeCord servers via Redis and BungeeCord Plugin Messaging Channel
+
+*Commands:*
+
+* /pm nickname - send private message to another player
+** aliases: privatemessage, message, m, msg, mes
+* /reply - reply to last player who send to you private message
+** aliases: r, otvet, rm
+
+*Dependencies:*
+
+* Vault
+* PlaceholderAPI
