@@ -96,10 +96,12 @@ public class ChatListener implements Listener {
     private Collection<Player> getLocalRecipients(Player player) {
         val players = new HashSet<Player>(Bukkit.getMaxPlayers());
         int range = this.manager.getConfigFile().getLocalChatRange();
-        for (Entity ent : player.getNearbyEntities(range, range, range)) {
-            if (ent.getType() != EntityType.PLAYER) continue;
-            players.add((Player)ent);
-        }
+        Bukkit.getScheduler().runTask(this.manager.getPlugin(), () -> {
+            for (Entity ent : player.getNearbyEntities(range, range, range)) {
+                if (ent.getType() != EntityType.PLAYER) continue;
+                players.add((Player) ent);
+            }
+        });
         return players;
     }
 
