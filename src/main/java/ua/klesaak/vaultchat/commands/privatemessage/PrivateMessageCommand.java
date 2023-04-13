@@ -39,7 +39,7 @@ public class PrivateMessageCommand implements CommandExecutor, TabCompleter {
             String receiver = args[0].toLowerCase();
             val playerList = manager.getBungeePlayerList().getPlayerList();
             if (playerList == null) return Collections.emptyList();
-            return Utils.copyPartialMatches(receiver, manager.getBungeePlayerList().getPlayerList(), new ArrayList<>());
+            return Utils.copyPartialMatches(receiver, playerList, new ArrayList<>());
         }
         return Collections.emptyList();
     }
