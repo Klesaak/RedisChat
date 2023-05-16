@@ -23,7 +23,7 @@ public class Utils {
         return builder.toString();
     }
 
-    public  <T extends Collection<? super String>> T copyPartialMatches(String token, Iterable<String> originals, T collection) {
+    public <T extends Collection<? super String>> T copyPartialMatches(String token, Iterable<String> originals, T collection) {
         Preconditions.checkNotNull(token, "Search token cannot be null");
         Preconditions.checkNotNull(collection, "Collection cannot be null");
         Preconditions.checkNotNull(originals, "Originals cannot be null");

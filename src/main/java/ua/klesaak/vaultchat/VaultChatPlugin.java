@@ -45,7 +45,7 @@ public final class VaultChatPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        vaultChatManager.getJedisPubSub().unsubscribe();
+        vaultChatManager.getRedisMessenger().close();
         vaultChatManager.getRedisPool().close();
     }
 }

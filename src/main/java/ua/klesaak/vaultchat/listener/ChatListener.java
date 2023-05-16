@@ -3,8 +3,6 @@ package ua.klesaak.vaultchat.listener;
 import lombok.val;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -96,20 +94,16 @@ public class ChatListener implements Listener {
     private Collection<Player> getLocalRecipients(Player player) {
         val players = new HashSet<Player>(Bukkit.getMaxPlayers());
         int range = this.manager.getConfigFile().getLocalChatRange();
-        Bukkit.getScheduler().runTask(this.manager.getPlugin(), () -> {
-            for (Entity ent : player.getNearbyEntities(range, range, range)) {
-                if (ent.getType() != EntityType.PLAYER) continue;
-                players.add((Player) ent);
-            }
-        });
+        for (val onlinePlayer : Bukkit.getOnlinePlayers()) {
+            if (onlinePlayer.getLocation().distance(player.getLocation()) <= range) players.add(onlinePlayer);
+        }
         return players;
     }
 
     private Collection<Player> getAdminRecipients() {
         val players = new HashSet<Player>(Bukkit.getMaxPlayers());
         for (Player pl : Bukkit.getOnlinePlayers()) {
-            if (!pl.hasPermission(VaultChatManager.ADMIN_CHAT_PERMISSION)) continue;
-            players.add(pl);
+            if (pl.hasPermission(VaultChatManager.ADMIN_CHAT_PERMISSION)) players.add(pl);
         }
         return players;
     }
@@ -117,8 +111,7 @@ public class ChatListener implements Listener {
     private Collection<Player> getDonateRecipients() {
         val players = new HashSet<Player>(Bukkit.getMaxPlayers());
         for (Player pl : Bukkit.getOnlinePlayers()) {
-            if (!pl.hasPermission(VaultChatManager.DONATE_CHAT_PERMISSION)) continue;
-            players.add(pl);
+            if (pl.hasPermission(VaultChatManager.DONATE_CHAT_PERMISSION)) players.add(pl);
         }
         return players;
     }

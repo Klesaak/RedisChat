@@ -1,11 +1,11 @@
 package ua.klesaak.vaultchat.commands;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import ua.klesaak.vaultchat.manager.VaultChatManager;
+import ua.klesaak.vaultchat.utils.AbstractBukkitCommand;
 
-public class ReloadCommand implements CommandExecutor {
+public class ReloadCommand extends AbstractBukkitCommand {
     private final VaultChatManager manager;
 
     public ReloadCommand(VaultChatManager manager) {
@@ -14,12 +14,8 @@ public class ReloadCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.hasPermission(VaultChatManager.RELOAD_PERMISSION)) {
-            return true;
-        }
-        this.manager.reload();
-        sender.sendMessage("§aУспешно перезагружено.");
-        return true;
+    public void onReceiveCommand(CommandSender sender, Command command, String[] args) {
+        this.cmdVerifyPermission(sender, VaultChatManager.RELOAD_PERMISSION);
+        sender.sendMessage(this.manager.reload());
     }
 }

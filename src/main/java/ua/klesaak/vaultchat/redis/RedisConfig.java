@@ -32,7 +32,7 @@ public class RedisConfig {
 
         public RedisPool(String host, int port, String pass) {
             val jpc = new JedisPoolConfig();
-            jpc.setLifo(false);
+            //jpc.setLifo(false);
             jpc.setTestOnBorrow(true);
             jpc.setMinIdle(3);
             jpc.setMaxTotal(500);
@@ -41,6 +41,10 @@ public class RedisConfig {
 
         public Jedis getRedis() {
             return pool.getResource();
+        }
+
+        public JedisPool getPool() {
+            return pool;
         }
 
         @Override

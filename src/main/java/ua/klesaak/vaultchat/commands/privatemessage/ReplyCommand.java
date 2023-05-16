@@ -2,13 +2,13 @@ package ua.klesaak.vaultchat.commands.privatemessage;
 
 import lombok.val;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import ua.klesaak.vaultchat.utils.AbstractBukkitCommand;
 import ua.klesaak.vaultchat.manager.VaultChatManager;
 import ua.klesaak.vaultchat.utils.Utils;
 
-public class ReplyCommand implements CommandExecutor {
+public class ReplyCommand extends AbstractBukkitCommand {
     private final VaultChatManager manager;
 
     public ReplyCommand(VaultChatManager manager) {
@@ -17,18 +17,17 @@ public class ReplyCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) return true;
+    public void onReceiveCommand(CommandSender sender, Command command, String[] args) {
+        Player player = this.cmdVerifyPlayer(sender);
         if (args.length < 1 || args[0].trim().isEmpty()) {
-            sender.sendMessage(this.manager.getConfigFile().getReplyMessageUsage(label));
-            return true;
+            player.sendMessage(this.manager.getConfigFile().getReplyMessageUsage(command.getLabel()));
+            return;
         }
-        val companion = this.manager.getCachedMessageSender(((Player)sender).getUniqueId().toString());
+        val companion = this.manager.getCachedMessageSender(player.getUniqueId().toString());
         if (companion == null) {
-            sender.sendMessage(this.manager.getConfigFile().getEmptyCompanions());
-            return true;
+            player.sendMessage(this.manager.getConfigFile().getEmptyCompanions());
+            return;
         }
-        this.manager.sendPrivateMessage(sender, companion, Utils.getFinalArg(args, 0));
-        return true;
+        this.manager.sendPrivateMessage(player, companion, Utils.getFinalArg(args, 0));
     }
 }

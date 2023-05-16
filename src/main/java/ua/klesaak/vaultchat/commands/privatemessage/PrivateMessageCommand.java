@@ -2,10 +2,10 @@ package ua.klesaak.vaultchat.commands.privatemessage;
 
 import lombok.val;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import ua.klesaak.vaultchat.utils.AbstractBukkitCommand;
 import ua.klesaak.vaultchat.manager.VaultChatManager;
 import ua.klesaak.vaultchat.utils.Utils;
 
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PrivateMessageCommand implements CommandExecutor, TabCompleter {
+public class PrivateMessageCommand extends AbstractBukkitCommand implements TabCompleter {
     private final VaultChatManager manager;
 
     public PrivateMessageCommand(VaultChatManager manager) {
@@ -23,14 +23,13 @@ public class PrivateMessageCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) return true;
+    public void onReceiveCommand(CommandSender sender, Command command, String[] args) {
+        Player player = this.cmdVerifyPlayer(sender);
         if (args.length < 2 || args[0].trim().length() < 2 || args[1].trim().isEmpty()) {
-            sender.sendMessage(this.manager.getConfigFile().getPrivateMessageUsage(label));
-            return true;
+            player.sendMessage(this.manager.getConfigFile().getPrivateMessageUsage(command.getLabel()));
+            return;
         }
-        this.manager.sendPrivateMessage(sender, args[0].trim(), Utils.getFinalArg(args, 1));
-        return true;
+        this.manager.sendPrivateMessage(player, args[0].trim(), Utils.getFinalArg(args, 1));
     }
 
     @Override
