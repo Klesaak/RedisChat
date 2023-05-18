@@ -10,24 +10,18 @@ import ua.klesaak.vaultchat.manager.VaultChatManager;
 import java.util.concurrent.CompletableFuture;
 
 public class RedisMessenger {
-
-    private /* final */ JedisPool jedisPool;
-    private /* final */ Subscription sub;
+    private final Subscription sub;
     private boolean closing = false;
-    private VaultChatManager manager;
+    private final VaultChatManager manager;
 
     public RedisMessenger(VaultChatManager manager) {
         this.manager = manager;
-    }
-
-    public void init(JedisPool jedisPool) {
-        this.jedisPool = jedisPool;
         this.sub = new Subscription();
         CompletableFuture.runAsync(this.sub);
     }
 
     public void sendOutgoingMessage(String channel, MessageData messageData) {
-        try (Jedis jedis = this.jedisPool.getResource()) {
+        try (Jedis jedis = this.manager.getJedisPool().getResource()) {
             jedis.publish(channel, VaultChatManager.GSON.toJson(messageData));
         } catch (Exception e) {
             e.printStackTrace();
@@ -38,7 +32,7 @@ public class RedisMessenger {
     public void close() {
         this.closing = true;
         this.sub.unsubscribe();
-        this.jedisPool.destroy();
+        this.manager.getJedisPool().destroy();
     }
 
     private class Subscription extends JedisPubSub implements Runnable {
@@ -46,8 +40,8 @@ public class RedisMessenger {
         @Override
         public void run() {
             boolean first = true;
-            while (!RedisMessenger.this.closing && !Thread.interrupted() && !RedisMessenger.this.jedisPool.isClosed()) {
-                try (Jedis jedis = RedisMessenger.this.jedisPool.getResource()) {
+            while (!RedisMessenger.this.closing && !Thread.interrupted() && !RedisMessenger.this.manager.getJedisPool().isClosed()) {
+                try (Jedis jedis = RedisMessenger.this.manager.getJedisPool().getResource()) {
                     if (first) {
                         first = false;
                     } else {
@@ -85,10 +79,11 @@ public class RedisMessenger {
                 case PRIVATE: {
                     val receiverBukkitPlayer = Bukkit.getPlayerExact(messageData.getReceiver());
                     if (receiverBukkitPlayer != null) {
-                        String format = RedisMessenger.this.manager.getConfigFile().getPrivateMessageFormat();
-                        format = RedisMessenger.this.manager.getConfigFile().replaceAll(ConfigFile.SENDER_PLACEHOLDER_PATTERN, format, messageData::getSender);
-                        format = RedisMessenger.this.manager.getConfigFile().replaceAll(ConfigFile.RECEIVER_PLACEHOLDER_PATTERN, format, messageData::getReceiver);
-                        format = RedisMessenger.this.manager.getConfigFile().replaceAll(ConfigFile.MESSAGE_PLACEHOLDER_PATTERN, format, messageData::getMessage);
+                        val configFile = RedisMessenger.this.manager.getConfigFile();
+                        String format = configFile.getPrivateMessageFormat();
+                        format = configFile.replaceAll(ConfigFile.SENDER_PLACEHOLDER_PATTERN, format, messageData::getSender);
+                        format = configFile.replaceAll(ConfigFile.RECEIVER_PLACEHOLDER_PATTERN, format, messageData::getReceiver);
+                        format = configFile.replaceAll(ConfigFile.MESSAGE_PLACEHOLDER_PATTERN, format, messageData::getMessage);
                         RedisMessenger.this.manager.cachePlayer(receiverBukkitPlayer.getUniqueId().toString(), messageData.getSender());
                         receiverBukkitPlayer.sendMessage(format);
                     }

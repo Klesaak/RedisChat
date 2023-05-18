@@ -8,6 +8,7 @@ import lombok.val;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 import ua.klesaak.vaultchat.VaultChatPlugin;
 import ua.klesaak.vaultchat.commands.ReloadCommand;
 import ua.klesaak.vaultchat.commands.privatemessage.PrivateMessageCommand;
@@ -30,7 +31,7 @@ public class VaultChatManager {
     private final VaultChatPlugin plugin;
     private ConfigFile configFile;
     private RedisConfig redisConfig;
-    private RedisConfig.RedisPool redisPool;
+    private JedisPool jedisPool;
     private RedisMessenger redisMessenger;
     private BungeePlayerList bungeePlayerList;
 
@@ -43,9 +44,8 @@ public class VaultChatManager {
         new ReloadCommand(this);
         new PrivateMessageCommand(this);
         new ReplyCommand(this);
-        this.redisPool = this.redisConfig.newRedisPool();
+        this.jedisPool = this.redisConfig.newJedisPool();
         this.redisMessenger = new RedisMessenger(this);
-        this.redisMessenger.init(this.redisPool.getPool());
     }
 
     public void sendPrivateMessage(Player messageSender, String receiver, String message) {
@@ -76,7 +76,7 @@ public class VaultChatManager {
 
     public void cachePlayer(String receiverUUID, String sender) {
         CompletableFuture.runAsync(() -> {
-            try (Jedis jedis = this.redisPool.getRedis()) {
+            try (Jedis jedis = this.jedisPool.getResource()) {
                 jedis.select(this.redisConfig.getDatabase());
                 jedis.set(receiverUUID, sender);
                 jedis.expire(receiverUUID, this.configFile.getReplyLifetimeInSeconds());
@@ -87,7 +87,7 @@ public class VaultChatManager {
     }
 
     public String getCachedMessageSender(String receiverUUID) {
-        try (Jedis jedis = this.redisPool.getRedis()) {
+        try (Jedis jedis = this.jedisPool.getResource()) {
             jedis.select(this.redisConfig.getDatabase());
             val cachedSender = jedis.get(receiverUUID);
             if (cachedSender != null) return cachedSender;
@@ -100,8 +100,10 @@ public class VaultChatManager {
     public String reload() {
         this.configFile = new ConfigFile(this.plugin);
         this.redisConfig = new RedisConfig(this.configFile.getRedisSection());
-        this.redisPool = this.redisConfig.newRedisPool();
-        this.redisMessenger.init(this.redisPool.getPool());
+        this.jedisPool.destroy();
+        this.redisMessenger.close();
+        this.jedisPool = this.redisConfig.newJedisPool();
+        this.redisMessenger = new RedisMessenger(this);
         return "§aУспешно перезагружено.";
     }
 }
