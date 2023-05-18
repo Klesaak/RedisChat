@@ -36,7 +36,6 @@ public class RedisMessenger {
     }
 
     private class Subscription extends JedisPubSub implements Runnable {
-
         @Override
         public void run() {
             boolean first = true;
