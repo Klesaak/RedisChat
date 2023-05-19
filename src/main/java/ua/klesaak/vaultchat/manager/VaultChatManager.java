@@ -27,7 +27,6 @@ public class VaultChatManager {
     public static final String COLOR_CHAT_PERMISSION    = "chatmanager.colorchat";
     public static final String ADMIN_CHAT_PERMISSION    = "chatmanager.admin-chat";
     public static final String DONATE_CHAT_PERMISSION   = "chatmanager.donate-chat";
-    public static final int SERVER_PORT = Bukkit.getServer().getPort();
     private final VaultChatPlugin plugin;
     private ConfigFile configFile;
     private RedisConfig redisConfig;
@@ -69,7 +68,7 @@ public class VaultChatManager {
             this.cachePlayer(playerReceiver.getUniqueId().toString(), messageSender.getName());
             return;
         }
-        val messageData = new MessageData(ChatType.PRIVATE, VaultChatManager.SERVER_PORT, messageSender.getName(), receiver, message);
+        val messageData = new MessageData(ChatType.PRIVATE, messageSender.getName(), receiver, message);
         this.redisMessenger.sendOutgoingMessage(this.redisConfig.getServerChanel(), messageData);
         messageSender.sendMessage(format);
     }

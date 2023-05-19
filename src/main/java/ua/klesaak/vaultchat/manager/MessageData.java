@@ -8,6 +8,5 @@ import lombok.experimental.FieldDefaults;
 @Getter @AllArgsConstructor @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MessageData {
     ChatType chatType;
-    int serverPort;
     String sender, receiver, message;
 }

@@ -32,7 +32,6 @@ public class RedisMessenger {
     public void close() {
         this.closing = true;
         this.sub.unsubscribe();
-        this.manager.getJedisPool().destroy();
     }
 
     private class Subscription extends JedisPubSub implements Runnable {
@@ -73,7 +72,7 @@ public class RedisMessenger {
         @Override
         public void onMessage(String channel, String msg) {
             val messageData = VaultChatManager.GSON.fromJson(msg, MessageData.class);
-            if (messageData.getServerPort() == VaultChatManager.SERVER_PORT) return;
+            if (!channel.equals(RedisMessenger.this.manager.getRedisConfig().getServerChanel())) return;
             switch (messageData.getChatType()) {
                 case PRIVATE: {
                     val receiverBukkitPlayer = Bukkit.getPlayerExact(messageData.getReceiver());
@@ -107,5 +106,4 @@ public class RedisMessenger {
             }
         }
     }
-
 }
